@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Loading tyranoVR system</title>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+<meta name="viewport" content=" user-scalable=no" />  
+   
+    
+<link href="./tyrano/tyrano.css" rel="stylesheet" type="text/css"/>
+<link href="./tyrano/libs/jquery-ui.css" rel="stylesheet" type="text/css"/>
+
+<script type="text/javascript" src="./tyrano/libs/jquery-2.0.3.min.js"></script>
+<script type="text/javascript" src="./tyrano/libs/jquery-ui.min.js"></script>
+
+
+<script type="text/javascript" src="./data/system/KeyConfig.js"></script>
+
+<script type="text/javascript" src="./tyrano/lang.js" ></script>
+<script type="text/javascript" src="./tyrano/libs.js" ></script>
+
+<script type="text/javascript" src="./tyrano/tyrano.js" ></script>
+<script type="text/javascript" src="./tyrano/tyrano.base.js" ></script>
+
+<script type="text/javascript" src="./tyrano/plugins/kag/kag.js" ></script>
+<script type="text/javascript" src="./tyrano/plugins/kag/kag.event.js" ></script>
+<script type="text/javascript" src="./tyrano/plugins/kag/kag.key_mouse.js" ></script>
+<script type="text/javascript" src="./tyrano/plugins/kag/kag.layer.js" ></script>
+<script type="text/javascript" src="./tyrano/plugins/kag/kag.parser.js" ></script>
+
+<script type="text/javascript" src="./tyrano/plugins/kag/kag.tag_ext.js" ></script>
+<script type="text/javascript" src="./tyrano/plugins/kag/kag.tag_system.js" ></script>
+<script type="text/javascript" src="./tyrano/plugins/kag/kag.tag.js" ></script>
+
+
+<!-- TYRANO VR  -->
+<script type="text/javascript" src="./tyrano/plugins/vr/libs/aframe.min.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/libs/aframe-html-shader.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/libs/aframe-extras.min.js"></script>
+
+<script type="text/javascript" src="./tyrano/plugins/vr/tyrano_vr_libs.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/tyrano_vr.js"></script>
+
+<script type="text/javascript" src="./tyrano/plugins/vr/tag.audio.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/tag.effect.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/tag.image.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/tag.movie.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/tag.anim.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/tag.system.js"></script>
+<script type="text/javascript" src="./tyrano/plugins/vr/tag.model.js"></script>
+
+
+<script type="text/javascript">
+
+
+AFRAME.registerComponent('intersect-color-change', {
+      
+  init: function () {
+    
+    var el = this.el;
+    var material = el.getAttribute('material');
+    var initialColor = material.color;
+    var self = this;
+
+    el.addEventListener('mousedown', function (evt) {
+    
+      el.setAttribute('material', 'color', '#FFFFFF');
+      
+      if (TYRANO.kag.key_mouse.canClick()) {
+        
+        //メッセージは削除
+        $("#vr_message").remove();
+        
+        TYRANO.kag.ftag.nextOrder();
+      }
+      
+    });
+
+    el.addEventListener('mouseup', function (evt) {
+      el.setAttribute('material', 'color', self.isMouseEnter ? '#24CAFF' : initialColor);
+    });
+
+    el.addEventListener('mouseenter', function () {
+      el.setAttribute('material', 'color', '#24CAFF');
+      self.isMouseEnter = true;
+    });
+
+    el.addEventListener('mouseleave', function () {
+      el.setAttribute('material', 'color', initialColor);
+      self.isMouseEnter = false;
+    });
+  }
+});
+
+</script>  
+
+</head>
+
+<body id="tyrano_base" class="tyrano_base" >
+
+
+<script>
+  AFRAME.registerComponent('alpha-test', {
+    dependencies: ['material'],
+    init: function () {
+      this.el.getObject3D('mesh').material.alphaTest = 0.01;
+    }
+  });
+</script>
+
+<a-scene id="vr">
+
+  <a-assets id="vr_assets">
+    
+    <!-- 以下システムアセット -->
+    <img id="window" src="./tyrano/images/system/box_front.png">
+    <img id="click_texture" src="./tyrano/images/system/click_texture.png" >
+    
+  </a-assets>
+  
+
+  <!-- Using the asset management system. -->
+
+  <!-- 以下システムで使用する -->  
+  <a-entity id="vr_scene" >
+  </a-entity>
+    
+  <!-- click用オブジェクト -->
+  <a-plane class="test evtobj" material="opacity:0;alphaTest:0.01"  intersect-color-change="" width=100 height=100 width position="0 -13.80 2" rotation="-90 0 0" ></a-plane>
+    
+  <!--
+  <a-gltf-model src="#model" position="0 0 -3" ></a-gltf-model>
+  -->
+  
+  <!-- 左右の壁 -->
+  <a-plane class="vr_frame" color="#000"  position="0 4.18 1.35" rotation="90 0 0" material="color:#000;width:512.3;alphaTest:0.01" geometry="height:10;width:10"></a-plane>
+  <a-plane class="vr_frame" color="#000"  position="0 -1 1.35" rotation="-90 0 0" material="color:#000;width:512.3;alphaTest:0.01" geometry="height:10;width:10"></a-plane>
+  
+  <!-- 上下の壁 -->
+  <a-plane class="vr_frame" color="#000" position="-4.8 1.25 1.35" rotation="0 90 -90" material="color:#000;width:512.3;alphaTest:0.01" geometry="height:10;width:6"></a-plane>
+  <a-plane class="vr_frame" color="#000" position="4.8 1.25 1.35" rotation="0 -90 90" material="color:#000;width:512.3;alphaTest:0.01" geometry="height:10;width:6"></a-plane>
+  
+  <!-- 後ろの壁 -->
+  <a-plane class="vr_frame" color="#000" position="0 1.8 6.3" rotation="180 0 90" material="color:#000;width:512.3;alphaTest:0.01" geometry="height:10;width:10"></a-plane>
+      
+  
+  <a-entity position="0 0 0">
+  
+    <a-camera >
+        
+        <a-entity id="vr_camera" >
+        </a-entity>
+        
+        <a-cursor id="eye_cast" raycaster="objects:.evteye" color="#fff" fuse="true" fuse-timeout="1500" visible="false">
+        </a-cursor>
+    </a-camera>
+  
+  </a-entity>
+  
+  <a-sky color="#EEEEEE" rotation="0 0 0" material="" geometry="" scale=""></a-sky>
+  
+</a-scene>
+
+
+<script>
+    
+
+
+function customEnterVR () {
+  
+    document.removeEventListener("click",customEnterVR);
+    
+    var scene = document.querySelector('a-scene');
+    if (scene) {
+        if (scene.hasLoaded) {
+            scene.enterVR();
+        } else {
+            scene.addEventListener('loaded', scene.enterVR);
+        }
+    }
+}
+
+//スリープから復帰したときに、コントローラーが消える件の対応。暫定措置
+document.querySelector('a-scene').addEventListener('enter-vr', function () {
+   //<a-entity class="hand_controll" id="leftHand" laser-controls="hand: left" raycaster="objects: .evtobj"></a-entity>
+   //<a-entity class="hand_controll" id="rightHand" laser-controls="hand: right" raycaster="objects: .evtobj" line="color: #33CCFF"></a-entity>
+   
+   //ステータスから表示状態を判断する
+   var color= $.convertColor(TYRANO.kag.stat.hand.color);
+   var visible = TYRANO.kag.stat.hand.color;
+   
+   $("#vr").append('<a-entity class="hand_controll" id="leftHand" visible="'+visible+'" laser-controls="hand: left" raycaster="objects: .evtobj" line="color: '+color+'"></a-entity>');
+   $("#vr").append('<a-entity class="hand_controll" id="rightHand" visible="'+visible+'" laser-controls="hand: right" raycaster="objects: .evtobj" line="color: '+color+'"></a-entity>');
+   
+});
+
+
+document.querySelector('a-scene').addEventListener('exit-vr', function () {
+    $(".hand_controll").remove();
+});
+
+  
+</script>
+
+
+</body>
+</html>

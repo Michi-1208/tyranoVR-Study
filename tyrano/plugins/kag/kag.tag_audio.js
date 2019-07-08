@@ -1,0 +1,1 @@
+tyrano.plugin.kag.tag.wbgm={pm:{},start:function(){if(this.kag.tmp.is_bgm_play==true)this.kag.tmp.is_bgm_play_wait=true;else this.kag.ftag.nextOrder()}};tyrano.plugin.kag.tag.wse={pm:{},start:function(){if(this.kag.tmp.is_se_play==true)this.kag.tmp.is_se_play_wait=true;else this.kag.ftag.nextOrder()}};
